@@ -30,6 +30,6 @@ response = client.search(
 
 
 for hit in response['hits']['hits']:
-	print(hit['_score'], hit['_source']['contentText'])
+	print(hit['_score'], hit['_source']['contentText'], hit['_source']['tickers'])
 
 
