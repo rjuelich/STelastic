@@ -1,0 +1,125 @@
+import argparse
+import configparser
+import decimal
+import json
+import logging
+#import pprint
+import time
+import urllib
+
+def getConfig():
+    parser = argparse.ArgumentParser(description='Poll Quandl for dataset export status')
+    parser.add_argument('--config-file', '-cf', dest='configFile', required=True)
+    parser.add_argument('--config-environment', '-env', dest='configEnv', required=True, default='dev')
+    args = parser.parse_args()
+    cfg = configparser.ConfigParser()
+    cfg.read(args.configFile)
+    config = cfg[args.configEnv]
+    ds_ids = {x.strip() for x in config['dataset_ids'].split(',')}
+    config.ds_ids = ds_ids
+    return config
+
+def main():
+    config = getConfig()
+    logging.basicConfig(format='%(asctime)s [%(thread)s] %(levelname)s %(name)s:%(message)s', filename=config['logfile'], level=int(config['loglevel']), )
+    logging.info('Quandl poll started')
+    try:
+        db = DbAccessor(config)
+        api_key = db.getQuandlApiKey()
+        for ds_id in config.ds_ids:
+            poll_dataset(db, ds_id, api_key)
+        logging.info('Quandl poll complete')
+    except:
+        logging.fatal('Quandl poll failure', exc_info=True, stack_info=True)
+        exit(1)
+
+if __name__ == "__main__":
+    main()
+
+
+
+from datetime import datetime
+import elasticsearch
+from elasticsearch_dsl import Search
+import os
+import sys
+import argparse
+from elasticsearch import Elasticsearch
+client = Elasticsearch()
+response = client.search(
+	index = "srphx",
+	body = {"query":{"multi_match":{"query":"APPL","fields":["_all"]}}}
+)
+for hit in response['hits']['hits']:
+	print(hit['_score'], hit['_source']['wordpressId'], hit['_source']['title'],hit['_source']['contentText'])
+for hit in response['hits']['hits']:
+	print(hit['_score'], hit['_source']['wordpressId'], hit['_source']['title'])
+
+
+
+
+
+def getConfig():
+	parser = argparse.ArgumentParser(description='Poll Quandl for dataset export status')
+	parser.add_argument('--config-file', '-cf', dest='configFile', required=False, default='fields.config')
+	parser.add_argument('--config-environment', '-env', dest='configEnv', required=False, default='dev')
+	args = parser.parse_args()
+	cfg = configparser.ConfigParser()
+	cfg.read(args.configFile)
+	config = cfg[args.configEnv]
+	fields = {x.strip() for x in config['rfields'].split(',')}
+	config.fields = fields
+	return config
+
+
+
+######################
+
+
+from datetime import datetime
+import elasticsearch
+from elasticsearch_dsl import Search
+import os
+import sys
+import argparse
+from elasticsearch import Elasticsearch
+import configparser
+import decimal
+import json
+import logging
+import pprint
+import time
+import urllib
+client = Elasticsearch()
+def getConfig():
+	parser = argparse.ArgumentParser(description='Poll Quandl for dataset export status')
+	parser.add_argument('--config-file', '-cf', dest='configFile', required=False, default='fields.config')
+	parser.add_argument('--config-environment', '-env', dest='configEnv', required=False, default='dev')
+	args = parser.parse_args()
+	cfg = configparser.ConfigParser()
+	cfg.read(args.configFile)
+	config = cfg[args.configEnv]
+	fields = {x.strip() for x in config['rfields'].split(',')}
+	config.fields = fields
+	return config
+config = getConfig()
+dex = "srphx"
+tick = "APPL"
+response = client.search(
+	index = dex,
+	body = {"query":{"multi_match":{"query":tick,"fields":"_all"}}}
+)
+for field in config.fields:
+	for hit in response['hits']['hits']:
+		print(hit['_score'], hit['_source'][field])
+response['hits']
+response
+response['hits']['hits']
+import readline
+for i in range(readline.get_current_history_length()):
+    print readline.get_history_item(i + 1)
+for hit in response['hits']['hits']:
+	for field in config.fields:
+		print(hit['_score'], hit['_source'][field])
+for i in range(readline.get_current_history_length()):
+    print readline.get_history_item(i + 1)
