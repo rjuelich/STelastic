@@ -45,28 +45,13 @@ def getTick(dex, tick):
         body = {"query":{"multi_match":{"query":tick,"fields":"_all"}}}
     )
     config = getConfig()
-#    print ("Config:\n" +  config['rfields'])
-#    print ("Response:\n")  
-    #print (response['hits'])
-    #rfa = config['rfields'].split(',')
-    #res = {}
-    #hidx = 1
-    #res['hits'] = []
     for hit in response['hits']['hits']:
-        #out = []
-        #out = {}
         out = [str(hit['_score'])]
-        #out = [out]
-       # res['hits'] = []
-       # res['hits'][hidx] = {}
         for field in config.fields:
-            #print(hit['_score'], hit['_source'][field])
             out.append(str(hit['_source'][field]))
     
         print(out)
 
-        #return;
-    #return;
 
 def main():
     getTick(dex, tick)
