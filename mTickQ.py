@@ -46,10 +46,12 @@ def getTick(dex, tick):
     )
     config = getConfig()
     for hit in response['hits']['hits']:
-        out = [str(hit['_score'])]
+        #out = [str(hit['_score'])]
+        out = {}
+        out['_score'] = str(hit['_score'])
         for field in config.fields:
-            out.append(str(hit['_source'][field]))
-    
+            #out.append(str(hit['_source'][field]))
+            out[field] = str(hit['_source'][field])
         print(out)
 
 
