@@ -6,4 +6,6 @@ Script to run a multi_match query on all fields of an Elasticsearch index for a 
 
 Output fields are defined in 'fields.config' 
 
+A python dictionary containing fields defined in 'fields.config' is returned.
+
 
